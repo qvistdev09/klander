@@ -1,0 +1,22 @@
+{
+  "name": "klander",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/qvistdev09/klander.git"
+  },
+  "keywords": [
+    "validation"
+  ],
+  "author": "Oscar Lindqvist",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qvistdev09/klander/issues"
+  },
+  "homepage": "https://github.com/qvistdev09/klander#readme"
+}
