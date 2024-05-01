@@ -1,10 +1,11 @@
 import { ROOT_SYMBOL } from "../consts.js";
 import { Klander } from "../types.js";
 
-export class KString implements Klander.Element<string> {
+export class KString<T extends string = string> implements Klander.Element<T> {
   private minLength: null | number = null;
   private maxLength: null | number = null;
   private regex: null | RegExp = null;
+  private enumValues: string[] | null = null;
 
   constructor() {}
 
@@ -23,7 +24,12 @@ export class KString implements Klander.Element<string> {
     return this;
   }
 
-  public validate(value: unknown): Klander.ValidationResult<string> {
+  public enum<T extends string>(...values: [T, ...T[]]) {
+    this.enumValues = values;
+    return this as unknown as KString<T>;
+  }
+
+  public validate(value: unknown): Klander.ValidationResult<T> {
     const errors: Klander.ValidationError[] = [];
 
     if (typeof value !== "string") {
@@ -51,8 +57,15 @@ export class KString implements Klander.Element<string> {
       });
     }
 
+    if (this.enumValues !== null && typeof value === "string" && !this.enumValues.includes(value)) {
+      errors.push({
+        location: ROOT_SYMBOL,
+        message: `Value must be one of the allowed enum values: ${this.enumValues.toLocaleString()}`,
+      });
+    }
+
     if (errors.length === 0) {
-      return { valid: true, data: "hello", errors: [] };
+      return { valid: true, data: value as T, errors: [] };
     }
 
     return {
