@@ -1,7 +1,7 @@
 import { ROOT_SYMBOL } from "../consts.js";
 import { Klander } from "../types.js";
 
-export class String implements Klander.Element<string> {
+export class KString implements Klander.Element<string> {
   private minLength: null | number = null;
   private maxLength: null | number = null;
   private regex: null | RegExp = null;

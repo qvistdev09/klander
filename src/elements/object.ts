@@ -1,12 +1,12 @@
 import { ROOT_SYMBOL } from "../consts.js";
 import { Klander, FlatType } from "../types.js";
 
-export class KlanderObject<T extends ObjectSchema> implements Klander.Element<Inferred<T>> {
+export class KObject<T extends ObjectSchema> implements Klander.Element<Inferred<T>> {
   private elements: IndexedElement[];
 
   constructor(objectSchema: T) {
     const elements: IndexedElement[] = [];
-    KlanderObject.indexElements([], elements, objectSchema);
+    KObject.indexElements([], elements, objectSchema);
     this.elements = elements;
   }
 
@@ -46,7 +46,7 @@ export class KlanderObject<T extends ObjectSchema> implements Klander.Element<In
   ) {
     for (const key in object) {
       const element = object[key];
-      if (KlanderObject.isElement(element)) {
+      if (KObject.isElement(element)) {
         const location = [...locationFragments, key];
         elements.push({
           locationFragments: location,
@@ -54,7 +54,7 @@ export class KlanderObject<T extends ObjectSchema> implements Klander.Element<In
           validator: element,
         });
       } else {
-        KlanderObject.indexElements([...locationFragments, key], elements, element);
+        KObject.indexElements([...locationFragments, key], elements, element);
       }
     }
   }
@@ -68,7 +68,7 @@ export class KlanderObject<T extends ObjectSchema> implements Klander.Element<In
   public validate(value: unknown): Klander.ValidationResult<Inferred<T>> {
     const results = this.elements.map((element) => {
       const result = element.validator.validate(
-        KlanderObject.getNestedValue(element.locationFragments, value)
+        KObject.getNestedValue(element.locationFragments, value)
       );
 
       result.errors.forEach((error) => {
