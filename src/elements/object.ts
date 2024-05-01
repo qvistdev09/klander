@@ -95,7 +95,7 @@ type IndexedElement = {
   locationFragments: string[];
 };
 
-type ObjectSchema = { [key: string]: Klander.Element<unknown> | ObjectSchema };
+export type ObjectSchema = { [key: string]: Klander.Element<unknown> | ObjectSchema };
 
 type Inferred<T extends ObjectSchema> = FlatType<{
   [Property in keyof T]: T[Property] extends Klander.Element<infer TS>
