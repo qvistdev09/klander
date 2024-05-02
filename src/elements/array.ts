@@ -1,10 +1,10 @@
 import { ROOT_SYMBOL } from "../consts.js";
-import { Klander } from "../types.js";
+import { K_Element, K_ValidationError, K_ValidationResult } from "../types.js";
 
-export class KArray<T> implements Klander.Element<T[]> {
-  constructor(private element: Klander.Element<T>) {}
+export class K_Array<T> implements K_Element<T[]> {
+  constructor(private element: K_Element<T>) {}
 
-  public validate(value: unknown): Klander.ValidationResult<T[]> {
+  public validate(value: unknown): K_ValidationResult<T[]> {
     if (!Array.isArray(value)) {
       return {
         valid: false,
@@ -13,7 +13,7 @@ export class KArray<T> implements Klander.Element<T[]> {
       };
     }
 
-    const errors: Klander.ValidationError[] = [];
+    const errors: K_ValidationError[] = [];
 
     value.forEach((arrayElement, index) => {
       const result = this.element.validate(arrayElement);

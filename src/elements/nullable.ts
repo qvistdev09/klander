@@ -1,9 +1,9 @@
-import { Klander } from "../types";
+import { K_Element, K_ValidationResult } from "../types.js";
 
-export class KNullable<T> implements Klander.Element<T | null> {
-  constructor(private element: Klander.Element<T>) {}
+export class K_Nullable<T> implements K_Element<T | null> {
+  constructor(private element: K_Element<T>) {}
 
-  public validate(value: unknown): Klander.ValidationResult<T | null> {
+  public validate(value: unknown): K_ValidationResult<T | null> {
     if (value === null) {
       return { valid: true, data: null, errors: [] };
     }

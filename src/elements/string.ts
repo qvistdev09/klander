@@ -1,7 +1,7 @@
 import { ROOT_SYMBOL } from "../consts.js";
-import { Klander } from "../types.js";
+import { K_Element, K_ValidationError, K_ValidationResult } from "../types.js";
 
-export class KString<T extends string = string> implements Klander.Element<T> {
+export class K_String<T extends string = string> implements K_Element<T> {
   private minLength: null | number = null;
   private maxLength: null | number = null;
   private regex: null | RegExp = null;
@@ -26,11 +26,11 @@ export class KString<T extends string = string> implements Klander.Element<T> {
 
   public enum<T extends string>(...values: [T, ...T[]]) {
     this.enumValues = values;
-    return this as unknown as KString<T>;
+    return this as unknown as K_String<T>;
   }
 
-  public validate(value: unknown): Klander.ValidationResult<T> {
-    const errors: Klander.ValidationError[] = [];
+  public validate(value: unknown): K_ValidationResult<T> {
+    const errors: K_ValidationError[] = [];
 
     if (typeof value !== "string") {
       errors.push({ location: ROOT_SYMBOL, message: "Value is not a string" });

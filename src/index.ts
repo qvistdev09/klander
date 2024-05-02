@@ -1,28 +1,28 @@
-import { KArray } from "./elements/array.js";
-import { KNullable } from "./elements/nullable.js";
-import { KObject, ObjectSchema } from "./elements/object.js";
-import { KOneOf } from "./elements/oneof.js";
-import { KString } from "./elements/string.js";
-import { Klander } from "./types.js";
+import { K_Array } from "./elements/array.js";
+import { K_Nullable } from "./elements/nullable.js";
+import { K_Object, ObjectSchema } from "./elements/object.js";
+import { K_OneOf } from "./elements/oneof.js";
+import { K_String } from "./elements/string.js";
+import { K_Element } from "types.js";
 
-function array<T>(element: Klander.Element<T>) {
-  return new KArray(element);
+function array<T>(element: K_Element<T>) {
+  return new K_Array(element);
 }
 
-function nullable<T>(element: Klander.Element<T>) {
-  return new KNullable(element);
+function nullable<T>(element: K_Element<T>) {
+  return new K_Nullable(element);
 }
 
 function object<T extends ObjectSchema>(schema: T) {
-  return new KObject(schema);
+  return new K_Object(schema);
 }
 
-function oneOf<T extends [Klander.Element<any>, ...Klander.Element<any>[]]>(...oneOfs: T) {
-  return new KOneOf(oneOfs);
+function oneOf<T extends [K_Element<any>, ...K_Element<any>[]]>(...oneOfs: T) {
+  return new K_OneOf(oneOfs);
 }
 
 function string() {
-  return new KString();
+  return new K_String();
 }
 
 export { array, nullable, object, oneOf, string };

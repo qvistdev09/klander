@@ -1,12 +1,12 @@
 import { ROOT_SYMBOL } from "../consts.js";
-import { Klander, FlatType } from "../types.js";
+import { K_Element, K_ValidationResult, FlatType } from "../types.js";
 
-export class KObject<T extends ObjectSchema> implements Klander.Element<Inferred<T>> {
+export class K_Object<T extends ObjectSchema> implements K_Element<Inferred<T>> {
   private elements: IndexedElement[];
 
   constructor(objectSchema: T) {
     const elements: IndexedElement[] = [];
-    KObject.indexElements([], elements, objectSchema);
+    K_Object.indexElements([], elements, objectSchema);
     this.elements = elements;
   }
 
@@ -46,7 +46,7 @@ export class KObject<T extends ObjectSchema> implements Klander.Element<Inferred
   ) {
     for (const key in object) {
       const element = object[key];
-      if (KObject.isElement(element)) {
+      if (K_Object.isElement(element)) {
         const location = [...locationFragments, key];
         elements.push({
           locationFragments: location,
@@ -54,21 +54,19 @@ export class KObject<T extends ObjectSchema> implements Klander.Element<Inferred
           validator: element,
         });
       } else {
-        KObject.indexElements([...locationFragments, key], elements, element);
+        K_Object.indexElements([...locationFragments, key], elements, element);
       }
     }
   }
 
-  private static isElement(
-    value: ObjectSchema | Klander.Element<unknown>
-  ): value is Klander.Element<unknown> {
+  private static isElement(value: ObjectSchema | K_Element<unknown>): value is K_Element<unknown> {
     return typeof value.validate === "function";
   }
 
-  public validate(value: unknown): Klander.ValidationResult<Inferred<T>> {
+  public validate(value: unknown): K_ValidationResult<Inferred<T>> {
     const results = this.elements.map((element) => {
       const result = element.validator.validate(
-        KObject.getNestedValue(element.locationFragments, value)
+        K_Object.getNestedValue(element.locationFragments, value)
       );
 
       result.errors.forEach((error) => {
@@ -91,14 +89,14 @@ export class KObject<T extends ObjectSchema> implements Klander.Element<Inferred
 
 type IndexedElement = {
   location: string;
-  validator: Klander.Element<unknown>;
+  validator: K_Element<unknown>;
   locationFragments: string[];
 };
 
-export type ObjectSchema = { [key: string]: Klander.Element<unknown> | ObjectSchema };
+export type ObjectSchema = { [key: string]: K_Element<unknown> | ObjectSchema };
 
 type Inferred<T extends ObjectSchema> = FlatType<{
-  [Property in keyof T]: T[Property] extends Klander.Element<infer TS>
+  [Property in keyof T]: T[Property] extends K_Element<infer TS>
     ? TS
     : T[Property] extends ObjectSchema
     ? Inferred<T[Property]>

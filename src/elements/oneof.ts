@@ -1,14 +1,13 @@
-import { Klander } from "../types.js";
+import { K_Element, K_ValidationResult } from "../types.js";
 
-export class KOneOf<T extends [Klander.Element<any>, ...Klander.Element<any>[]]>
-  implements Klander.Element<MapInnerElementTypes<T>[number]>
+export class K_OneOf<T extends [K_Element<any>, ...K_Element<any>[]]>
+  implements K_Element<MapInnerElementTypes<T>[number]>
 {
   constructor(private oneOfs: T) {}
 
-  public validate(value: unknown): Klander.ValidationResult<MapInnerElementTypes<T>[number]> {
+  public validate(value: unknown): K_ValidationResult<MapInnerElementTypes<T>[number]> {
+    const errorSets: K_ValidationResult<any>[] = [];
 
-    const errorSets: Klander.ValidationResult<any>[] = [];
-    
     for (const oneOf of this.oneOfs) {
       const result = oneOf.validate(value);
       if (result.valid) {
@@ -23,6 +22,6 @@ export class KOneOf<T extends [Klander.Element<any>, ...Klander.Element<any>[]]>
   }
 }
 
-type MapInnerElementTypes<T extends [Klander.Element<any>, ...Klander.Element<any>[]]> = {
-  [Key in keyof T]: T[Key] extends Klander.Element<infer TS> ? TS : never;
+type MapInnerElementTypes<T extends [K_Element<any>, ...K_Element<any>[]]> = {
+  [Key in keyof T]: T[Key] extends K_Element<infer TS> ? TS : never;
 };
