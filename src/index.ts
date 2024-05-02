@@ -1,4 +1,5 @@
 import { K_Array } from "./elements/array.js";
+import { K_Boolean } from "./elements/boolean.js";
 import { K_Nullable } from "./elements/nullable.js";
 import { K_Object, ObjectSchema } from "./elements/object.js";
 import { K_OneOf } from "./elements/oneof.js";
@@ -7,6 +8,10 @@ import { K_Element } from "types.js";
 
 function array<T>(element: K_Element<T>) {
   return new K_Array(element);
+}
+
+function boolean() {
+  return new K_Boolean();
 }
 
 function nullable<T>(element: K_Element<T>) {
@@ -25,4 +30,4 @@ function string() {
   return new K_String();
 }
 
-export { array, nullable, object, oneOf, string };
+export { array, boolean, nullable, object, oneOf, string };
