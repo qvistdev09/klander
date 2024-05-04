@@ -1,7 +1,7 @@
-import { ROOT_SYMBOL } from "../consts";
-import { K_ValidationContainer } from "../core/validation-container";
-import { K_ValidationError } from "../core/validation-error";
-import { K_ValidationCheck, K_ValidationResult } from "../types";
+import { ROOT_SYMBOL } from "../consts.js";
+import { K_ValidationContainer } from "../core/validation-container.js";
+import { K_ValidationError } from "../core/validation-error.js";
+import { K_ValidationCheck, K_ValidationResult } from "../types.js";
 
 export abstract class K_Element<T> {
   protected validators: K_ValidationCheck[] = [];

@@ -1,9 +1,9 @@
-import { ROOT_SYMBOL } from "./consts";
-import { K_IndexedElement } from "./core/indexed-element";
-import { K_ValidationContainer } from "./core/validation-container";
-import { K_ValidationError } from "./core/validation-error";
-import { K_Element } from "./elements/element";
-import { K_ObjectSchema, K_ValidationResult } from "./types";
+import { ROOT_SYMBOL } from "./consts.js";
+import { K_IndexedElement } from "./core/indexed-element.js";
+import { K_ValidationContainer } from "./core/validation-container.js";
+import { K_ValidationError } from "./core/validation-error.js";
+import { K_Element } from "./elements/element.js";
+import { K_ObjectSchema, K_ValidationResult } from "./types.js";
 
 export function prependArrayIndex(error: K_ValidationError, index: number) {
   error.location =
