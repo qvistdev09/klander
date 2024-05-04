@@ -7,6 +7,8 @@ export class K_Array<T> extends K_Element<T[]> {
   constructor(private element: K_Element<T>) {
     super();
 
+    this.addNestedElement(element);
+
     this.addValidator((data, container) => {
       if (!Array.isArray(data)) {
         container.addError(new K_ValidationError(ROOT_SYMBOL, "Value must be an array"));

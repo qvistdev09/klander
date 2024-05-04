@@ -7,6 +7,11 @@ export class K_OneOf<T extends [K_Element<any>, ...K_Element<any>[]]> extends K_
 > {
   constructor(private oneOfs: T) {
     super();
+
+    for (const oneOf of oneOfs) {
+      this.addNestedElement(oneOf);
+    }
+
     this.addValidator((data, container) => {
       const errorSets: K_FailureResult[] = [];
       for (const oneOf of this.oneOfs) {

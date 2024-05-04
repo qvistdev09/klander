@@ -10,6 +10,11 @@ export type K_ValidationResult<T> = K_ValidResult<T> | K_FailureResult;
 
 export type K_ValidationCheck = (data: unknown, container: K_ValidationContainer) => void;
 
+export type K_AsyncValidationCheck = (
+  data: unknown,
+  container: K_ValidationContainer
+) => Promise<void>;
+
 export type FlatType<T> = T extends object ? { [K in keyof T]: FlatType<T[K]> } : T;
 
 export type K_ObjectSchema = { [key: string]: K_Element<unknown> | K_ObjectSchema };

@@ -14,6 +14,11 @@ export class K_Object<T extends K_ObjectSchema> extends K_Element<Inferred<T>> {
   constructor(objectSchema: T) {
     super();
     this.elements = indexElements(objectSchema);
+
+    for (const element of this.elements) {
+      this.addNestedElement(element.validator);
+    }
+
     this.addValidator((data, container) => {
       for (const { validator, locationFragments, location } of this.elements) {
         const nestedValue = getNestedValue(locationFragments, data);
