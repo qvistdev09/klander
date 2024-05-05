@@ -13,7 +13,7 @@ export abstract class K_Element<T> {
     this.nestedElements.push(nested);
   }
 
-  public getAsyncValidators() {
+  protected getAsyncValidators() {
     const asyncValidators: K_AsyncValidationCheck[] = [];
     for (const validator of this.asyncValidators) {
       asyncValidators.push(validator);
