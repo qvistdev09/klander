@@ -12,8 +12,24 @@ export function prependArrayIndex(error: K_ValidationError, index: number) {
       : `[${index.toString()}].${error.location}`;
 }
 
+export function prependArrayIndexToResult(result: K_ValidationResult<unknown>, index: number) {
+  if (!result.valid) {
+    for (const error of result.errors) {
+      prependArrayIndex(error, index);
+    }
+  }
+}
+
 export function contextualizeErrorLocation(error: K_ValidationError, location: string) {
   error.location = error.location === ROOT_SYMBOL ? location : `${location}.${error.location}`;
+}
+
+export function contextualizeResultErrors(result: K_ValidationResult<unknown>, location: string) {
+  if (!result.valid) {
+    for (const error of result.errors) {
+      contextualizeErrorLocation(error, location);
+    }
+  }
 }
 
 export function mergeResultIntoContainer(

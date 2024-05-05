@@ -1,6 +1,10 @@
 import { ROOT_SYMBOL } from "../consts.js";
 import { K_ValidationError } from "../core/validation-error.js";
-import { prependArrayIndex } from "../utils.js";
+import {
+  mergeResultIntoContainer,
+  prependArrayIndex,
+  prependArrayIndexToResult,
+} from "../utils.js";
 import { K_Element } from "./element.js";
 
 export class K_Array<T> extends K_Element<T[]> {
@@ -15,12 +19,8 @@ export class K_Array<T> extends K_Element<T[]> {
       } else {
         for (const [index, arrayElement] of data.entries()) {
           const result = this.element.validate(arrayElement);
-          if (!result.valid) {
-            for (const error of result.errors) {
-              prependArrayIndex(error, index);
-              container.addError(error);
-            }
-          }
+          prependArrayIndexToResult(result, index);
+          mergeResultIntoContainer(container, result);
         }
       }
     });
