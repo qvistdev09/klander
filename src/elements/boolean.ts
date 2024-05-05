@@ -12,6 +12,9 @@ export class K_Boolean<T extends boolean = boolean> extends K_Element<T> {
     });
   }
 
+  /**
+   * Adds a requirement that the given value must be exactly true or false.
+   */
   public mustBe<T extends true | false>(value: T) {
     this.addValidator((data, container) => {
       if (typeof data === "boolean" && data !== value) {
