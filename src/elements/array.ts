@@ -22,6 +22,9 @@ export class K_Array<T> extends K_Element<T[]> {
     });
   }
 
+  /**
+   * Adds a requirement to ensure that the array has at least a minimum number of elements.
+   */
   public minItems(min: number, message?: string) {
     this.addValidator((data, container) => {
       if (Array.isArray(data) && data.length < min) {
@@ -36,6 +39,9 @@ export class K_Array<T> extends K_Element<T[]> {
     return this;
   }
 
+  /**
+   * Adds a requirement to ensure that the array has at most a maximum number of elements.
+   */
   public maxItems(max: number, message?: string) {
     this.addValidator((data, container) => {
       if (Array.isArray(data) && data.length > max) {
