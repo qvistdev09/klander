@@ -12,6 +12,9 @@ export class K_Number<T extends number = number> extends K_Element<T> {
     });
   }
 
+  /**
+   * Adds a validation check to ensure that the number is not lesser than the set minimum value.
+   */
   public min(min: number) {
     this.addValidator((data, container) => {
       if (typeof data === "number" && data < min) {
