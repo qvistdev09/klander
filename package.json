@@ -5,7 +5,7 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "test": "tsc && node --watch --test",
+    "test": "tsc && node --test",
     "build": "tsc",
     "watch": "tsc --watch"
   },
@@ -25,5 +25,9 @@
   "devDependencies": {
     "@types/node": "^20.12.8",
     "typescript": "^5.4.5"
-  }
+  },
+  "files": [
+    "dist/**/*",
+    "!dist/tests/**/*"
+  ]
 }
