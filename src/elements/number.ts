@@ -1,6 +1,6 @@
-import { ROOT_SYMBOL } from "../consts";
-import { K_ValidationError } from "../core/validation-error";
-import { K_Element } from "./element";
+import { ROOT_SYMBOL } from "../consts.js";
+import { K_ValidationError } from "../core/validation-error.js";
+import { K_Element } from "./element.js";
 
 export class K_Number<T extends number = number> extends K_Element<T> {
   constructor() {

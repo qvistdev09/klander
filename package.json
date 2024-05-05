@@ -5,7 +5,7 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "tsc && node --watch --test",
     "build": "tsc",
     "watch": "tsc --watch"
   },
@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/qvistdev09/klander#readme",
   "devDependencies": {
+    "@types/node": "^20.12.8",
     "typescript": "^5.4.5"
   }
 }
