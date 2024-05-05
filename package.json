@@ -1,6 +1,6 @@
 {
   "name": "klander",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Javascript validation library with typed results",
   "type": "module",
   "main": "dist/index.js",
