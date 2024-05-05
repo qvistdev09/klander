@@ -21,4 +21,32 @@ export class K_Array<T> extends K_Element<T[]> {
       }
     });
   }
+
+  public minItems(min: number, message?: string) {
+    this.addValidator((data, container) => {
+      if (Array.isArray(data) && data.length < min) {
+        container.addError(
+          new K_ValidationError(
+            ROOT_SYMBOL,
+            message ?? `Array must not have less than ${min} elements`
+          )
+        );
+      }
+    });
+    return this;
+  }
+
+  public maxItems(max: number, message?: string) {
+    this.addValidator((data, container) => {
+      if (Array.isArray(data) && data.length > max) {
+        container.addError(
+          new K_ValidationError(
+            ROOT_SYMBOL,
+            message ?? `Array must not have more than ${max} elements`
+          )
+        );
+      }
+    });
+    return this;
+  }
 }
