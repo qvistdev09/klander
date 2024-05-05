@@ -6,6 +6,7 @@ import { K_OneOf } from "./elements/oneof.js";
 import { K_String } from "./elements/string.js";
 import { K_Element } from "./elements/element.js";
 import { K_ObjectSchema } from "./types.js";
+import { K_Number } from "./elements/number.js";
 
 function array<T>(element: K_Element<T>) {
   return new K_Array(element);
@@ -17,6 +18,10 @@ function boolean() {
 
 function nullable<T>(element: K_Element<T>) {
   return new K_Nullable(element);
+}
+
+function number() {
+  return new K_Number();
 }
 
 function object<T extends K_ObjectSchema>(schema: T) {
@@ -31,4 +36,4 @@ function string() {
   return new K_String();
 }
 
-export { array, boolean, nullable, object, oneOf, string };
+export { array, boolean, nullable, number, object, oneOf, string };
