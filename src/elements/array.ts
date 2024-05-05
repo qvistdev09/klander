@@ -1,10 +1,6 @@
 import { ROOT_SYMBOL } from "../consts.js";
 import { K_ValidationError } from "../core/validation-error.js";
-import {
-  mergeResultIntoContainer,
-  prependArrayIndex,
-  prependArrayIndexToResult,
-} from "../utils.js";
+import { mergeResultIntoContainer, prependArrayIndexToResult } from "../utils.js";
 import { K_Element } from "./element.js";
 
 export class K_Array<T> extends K_Element<T[]> {
