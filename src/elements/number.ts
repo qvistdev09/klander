@@ -12,6 +12,9 @@ export class K_Number<T extends number = number> extends K_Element<T> {
     });
   }
 
+  /**
+   * Ensures that the number is not lesser than the set minimum value.
+   */
   public min(min: number) {
     this.addValidator((data, container) => {
       if (typeof data === "number" && data < min) {
@@ -23,6 +26,9 @@ export class K_Number<T extends number = number> extends K_Element<T> {
     return this;
   }
 
+  /**
+   * Ensures that the number is not greater than the set maximum value.
+   */
   public max(max: number) {
     this.addValidator((data, container) => {
       if (typeof data === "number" && data > max) {
@@ -34,6 +40,9 @@ export class K_Number<T extends number = number> extends K_Element<T> {
     return this;
   }
 
+  /**
+   * Ensures that the number is an integer.
+   */
   public int() {
     this.addValidator((data, container) => {
       if (typeof data === "number" && !Number.isInteger(data)) {
@@ -43,6 +52,9 @@ export class K_Number<T extends number = number> extends K_Element<T> {
     return this;
   }
 
+  /**
+   * Ensures that the number is one of the given values.
+   */
   public enum<T extends number>(...values: [T, ...T[]]) {
     this.addValidator((data, container) => {
       if (typeof data === "number" && !(values as number[]).includes(data)) {

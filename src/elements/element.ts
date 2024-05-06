@@ -30,6 +30,9 @@ export abstract class K_Element<T> {
     this.validators.push(validator);
   }
 
+  /**
+   * Adds a custom validation function which adds an error with the given message if it returns false.
+   */
   public custom(test: (data: unknown) => boolean, message: string) {
     this.validators.push((data, container) => {
       if (!test(data)) {
@@ -39,6 +42,9 @@ export abstract class K_Element<T> {
     return this;
   }
 
+  /**
+   * Adds a custom async validation function which adds an error with the given message if the promise resolves to false.
+   */
   public customAsync(test: (data: unknown) => Promise<boolean>, message: string) {
     this.asyncValidators.push(async (data, container) => {
       const passed = await test(data);
@@ -49,6 +55,9 @@ export abstract class K_Element<T> {
     return this;
   }
 
+  /**
+   * Validates an unknown value and returns a validation result. Async validations are ignored when using this function. To include async checks, {@link validateAsync}.
+   */
   public validate(data: unknown): K_ValidationResult<T> {
     const container = new K_ValidationContainer();
 
@@ -66,6 +75,9 @@ export abstract class K_Element<T> {
     return container.toErrorResponse<T>();
   }
 
+  /**
+   * Validates any value and returns a validation result. Includes async validations.
+   */
   public async validateAsync(data: unknown): Promise<K_ValidationResult<T>> {
     const container = new K_ValidationContainer();
 

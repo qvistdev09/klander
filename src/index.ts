@@ -23,7 +23,7 @@ function boolean() {
 }
 
 /**
- * Wraps an existing validator to allow values to be null.
+ * Wraps an existing validator to allow value to be null.
  */
 function nullable<T>(element: K_Element<T>) {
   return new K_Nullable(element);

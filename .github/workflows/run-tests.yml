@@ -24,21 +24,3 @@ jobs:
 
       - name: Run Tests
         run: npm run test
-
-      - name: Report Test Results to GitHub
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const { context, github } = require('@actions/github');
-
-            const { data } = await github.checks.create({
-              ...context.repo,
-              name: 'Tests',
-              head_sha: context.sha,
-              status: 'completed',
-              conclusion: '${{ job.status }}',
-              output: {
-                title: 'Test Results',
-                summary: '${{ job.status }}'
-              }
-            });

@@ -13,7 +13,7 @@ export class K_String<T extends string = string> extends K_Element<T> {
   }
 
   /**
-   * Adds a requirement to enforce a minimum length for the string.
+   * Enforces a minimum length for the string.
    */
   public min(min: number) {
     this.addValidator((data, container) => {
@@ -27,7 +27,7 @@ export class K_String<T extends string = string> extends K_Element<T> {
   }
 
   /**
-   * Adds a requirement to enforce a maximum length for the string.
+   * Enforces a maximum length for the string.
    */
   public max(max: number) {
     this.addValidator((data, container) => {
@@ -41,7 +41,7 @@ export class K_String<T extends string = string> extends K_Element<T> {
   }
 
   /**
-   * Adds a requirement to enforce a specific pattern for the string.
+   * Enforces a regex pattern for the string.
    */
   public pattern(pattern: RegExp) {
     this.addValidator((data, container) => {
@@ -55,7 +55,7 @@ export class K_String<T extends string = string> extends K_Element<T> {
   }
 
   /**
-   * Adds a requirement to enforce that the string is one of the given values.
+   * Ensures that the string is one of the given values.
    */
   public enum<T extends string>(...values: [T, ...T[]]) {
     this.addValidator((data, container) => {
