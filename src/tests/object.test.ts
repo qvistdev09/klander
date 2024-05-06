@@ -37,3 +37,13 @@ test("object validator should correctly validate well-formed data with nested el
   assert.ok(result.valid);
   assert.deepStrictEqual(result.data, data);
 });
+
+test("object validator should values that are not expected objects as invalid", () => {
+  const validator = object({ author: { name: string() }, meta: { ratings: array(number()) } });
+
+  assert.equal(validator.validate(undefined).valid, false);
+  assert.equal(validator.validate(function () {}).valid, false);
+  assert.equal(validator.validate(2).valid, false);
+  assert.equal(validator.validate("2").valid, false);
+  assert.equal(validator.validate(null).valid, false);
+});
