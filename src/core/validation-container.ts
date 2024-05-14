@@ -1,5 +1,4 @@
-import { K_ValidationResult } from "../types.js";
-import { K_ValidationError } from "./validation-error.js";
+import { K_ValidationError, K_ValidationResult } from "../types.js";
 
 export class K_ValidationContainer {
   public errors: K_ValidationError[] = [];
@@ -13,8 +12,12 @@ export class K_ValidationContainer {
     this.markedForEarlyApproval = true;
   }
 
-  public addError(error: K_ValidationError) {
+  public addExistingError(error: K_ValidationError) {
     this.errors.push(error);
+  }
+
+  public addNewError(location: string, message: string) {
+    this.errors.push({ location, message });
   }
 
   public toValidResponse<T>(data: unknown): K_ValidationResult<T> {

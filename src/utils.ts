@@ -1,9 +1,8 @@
 import { ROOT_SYMBOL } from "./consts.js";
 import { K_IndexedElement } from "./core/indexed-element.js";
 import { K_ValidationContainer } from "./core/validation-container.js";
-import { K_ValidationError } from "./core/validation-error.js";
 import { K_Element } from "./elements/element.js";
-import { K_ObjectSchema, K_ValidationResult } from "./types.js";
+import { K_ObjectSchema, K_ValidationError, K_ValidationResult } from "./types.js";
 
 export function prependArrayIndex(error: K_ValidationError, index: number) {
   error.location =
@@ -38,7 +37,7 @@ export function mergeResultIntoContainer(
 ) {
   if (!result.valid) {
     for (const error of result.errors) {
-      container.addError(error);
+      container.addExistingError(error);
     }
   }
 }

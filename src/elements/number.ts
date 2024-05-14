@@ -1,5 +1,4 @@
 import { ROOT_SYMBOL } from "../consts.js";
-import { K_ValidationError } from "../core/validation-error.js";
 import { K_Element } from "./element.js";
 
 export class K_Number<T extends number = number> extends K_Element<T> {
@@ -7,7 +6,7 @@ export class K_Number<T extends number = number> extends K_Element<T> {
     super();
     this.addValidator((data, container) => {
       if (typeof data !== "number" || Number.isNaN(data)) {
-        container.addError(new K_ValidationError(ROOT_SYMBOL, "Value must be a number"));
+        container.addNewError(ROOT_SYMBOL, "Value must be a number");
       }
     });
   }
@@ -18,9 +17,7 @@ export class K_Number<T extends number = number> extends K_Element<T> {
   public min(min: number) {
     this.addValidator((data, container) => {
       if (typeof data === "number" && data < min) {
-        container.addError(
-          new K_ValidationError(ROOT_SYMBOL, `Value must not be lesser than ${min.toString()}`)
-        );
+        container.addNewError(ROOT_SYMBOL, `Value must not be lesser than ${min.toString()}`);
       }
     });
     return this;
@@ -32,9 +29,7 @@ export class K_Number<T extends number = number> extends K_Element<T> {
   public max(max: number) {
     this.addValidator((data, container) => {
       if (typeof data === "number" && data > max) {
-        container.addError(
-          new K_ValidationError(ROOT_SYMBOL, `Value must not be greater than ${max.toString()}`)
-        );
+        container.addNewError(ROOT_SYMBOL, `Value must not be greater than ${max.toString()}`);
       }
     });
     return this;
@@ -46,7 +41,7 @@ export class K_Number<T extends number = number> extends K_Element<T> {
   public int() {
     this.addValidator((data, container) => {
       if (typeof data === "number" && !Number.isInteger(data)) {
-        container.addError(new K_ValidationError(ROOT_SYMBOL, "Value must be an integer"));
+        container.addNewError(ROOT_SYMBOL, "Value must be an integer");
       }
     });
     return this;
@@ -58,11 +53,9 @@ export class K_Number<T extends number = number> extends K_Element<T> {
   public enum<T extends number>(...values: [T, ...T[]]) {
     this.addValidator((data, container) => {
       if (typeof data === "number" && !(values as number[]).includes(data)) {
-        container.addError(
-          new K_ValidationError(
-            ROOT_SYMBOL,
-            `Value must be one of the allowed enum values: ${values.toLocaleString()}`
-          )
+        container.addNewError(
+          ROOT_SYMBOL,
+          `Value must be one of the allowed enum values: ${values.toLocaleString()}`
         );
       }
     });

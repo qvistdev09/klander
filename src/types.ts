@@ -1,6 +1,7 @@
 import { K_ValidationContainer } from "./core/validation-container";
-import { K_ValidationError } from "./core/validation-error";
 import { K_Element } from "./elements/element";
+
+export type K_ValidationError = { message: string; location: string };
 
 export type K_FailureResult = { valid: false; errors: K_ValidationError[] };
 
