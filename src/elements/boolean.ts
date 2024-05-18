@@ -1,7 +1,7 @@
 import { ROOT_SYMBOL } from "../consts.js";
-import { K_Element } from "./element.js";
+import { K_Validator } from "./validator.js";
 
-export class K_Boolean<T extends boolean = boolean> extends K_Element<T> {
+export class K_Boolean<T extends boolean = boolean> extends K_Validator<T> {
   constructor() {
     super();
     this.addValidator((data, container) => {

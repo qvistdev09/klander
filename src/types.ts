@@ -1,5 +1,5 @@
 import { K_ValidationContainer } from "./core/validation-container";
-import { K_Element } from "./elements/element";
+import { K_Validator } from "./elements/validator";
 
 export type K_ValidationError = { message: string; location: string };
 
@@ -32,4 +32,4 @@ export type FlatType<T> = T extends U_FlattenException
   ? { [K in keyof T]: FlatType<T[K]> }
   : T;
 
-export type K_ObjectSchema = { [key: string]: K_Element<unknown> | K_ObjectSchema };
+export type K_ObjectSchema = { [key: string]: K_Validator<unknown> | K_ObjectSchema };

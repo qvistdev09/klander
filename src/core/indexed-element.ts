@@ -1,7 +1,7 @@
-import { K_Element } from "../elements/element";
+import { K_Validator } from "../elements/validator";
 
 export class K_IndexedElement {
-  constructor(public locationFragments: string[], public validator: K_Element<unknown>) {}
+  constructor(public locationFragments: string[], public validator: K_Validator<unknown>) {}
 
   public get location() {
     return this.locationFragments.join(".");

@@ -1,9 +1,9 @@
 import { ROOT_SYMBOL } from "../consts.js";
 import { mergeResultIntoContainer, prependArrayIndexToResult } from "../utils.js";
-import { K_Element } from "./element.js";
+import { K_Validator } from "./validator.js";
 
-export class K_Array<T> extends K_Element<T[]> {
-  constructor(private element: K_Element<T>) {
+export class K_Array<T> extends K_Validator<T[]> {
+  constructor(private element: K_Validator<T>) {
     super();
 
     this.addNestedElement(element);

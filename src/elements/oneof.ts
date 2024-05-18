@@ -1,8 +1,8 @@
 import { K_FailureResult } from "../types.js";
 import { mergeResultIntoContainer } from "../utils.js";
-import { K_Element } from "./element.js";
+import { K_Validator } from "./validator.js";
 
-export class K_OneOf<T extends [K_Element<any>, ...K_Element<any>[]]> extends K_Element<
+export class K_OneOf<T extends [K_Validator<any>, ...K_Validator<any>[]]> extends K_Validator<
   MapInnerElementTypes<T>[number]
 > {
   constructor(private oneOfs: T) {
@@ -27,6 +27,6 @@ export class K_OneOf<T extends [K_Element<any>, ...K_Element<any>[]]> extends K_
   }
 }
 
-type MapInnerElementTypes<T extends [K_Element<any>, ...K_Element<any>[]]> = {
-  [Key in keyof T]: T[Key] extends K_Element<infer TS> ? TS : never;
+type MapInnerElementTypes<T extends [K_Validator<any>, ...K_Validator<any>[]]> = {
+  [Key in keyof T]: T[Key] extends K_Validator<infer TS> ? TS : never;
 };

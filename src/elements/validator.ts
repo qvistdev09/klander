@@ -2,13 +2,13 @@ import { ROOT_SYMBOL } from "../consts.js";
 import { K_ValidationContainer } from "../core/validation-container.js";
 import { K_AsyncValidationCheck, K_ValidationCheck, K_ValidationResult } from "../types.js";
 
-export abstract class K_Element<T> {
-  protected nestedElements: K_Element<unknown>[] = [];
+export abstract class K_Validator<T> {
+  protected nestedElements: K_Validator<unknown>[] = [];
 
   protected validators: K_ValidationCheck[] = [];
   protected asyncValidators: K_AsyncValidationCheck[] = [];
 
-  protected addNestedElement(nested: K_Element<unknown>) {
+  protected addNestedElement(nested: K_Validator<unknown>) {
     this.nestedElements.push(nested);
   }
 

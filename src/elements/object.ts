@@ -6,9 +6,9 @@ import {
   indexElements,
   mergeResultIntoContainer,
 } from "../utils.js";
-import { K_Element } from "./element.js";
+import { K_Validator } from "./validator.js";
 
-export class K_Object<T extends K_ObjectSchema> extends K_Element<U_Inferred<T>> {
+export class K_Object<T extends K_ObjectSchema> extends K_Validator<U_Inferred<T>> {
   private elements: K_IndexedElement[];
 
   constructor(objectSchema: T) {
@@ -31,7 +31,7 @@ export class K_Object<T extends K_ObjectSchema> extends K_Element<U_Inferred<T>>
 }
 
 type U_Inferred<T extends K_ObjectSchema> = U_FlatType<{
-  [Property in keyof T]: T[Property] extends K_Element<infer TS>
+  [Property in keyof T]: T[Property] extends K_Validator<infer TS>
     ? TS
     : T[Property] extends K_ObjectSchema
     ? U_Inferred<T[Property]>

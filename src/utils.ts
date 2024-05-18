@@ -1,7 +1,7 @@
 import { ROOT_SYMBOL } from "./consts.js";
 import { K_IndexedElement } from "./core/indexed-element.js";
 import { K_ValidationContainer } from "./core/validation-container.js";
-import { K_Element } from "./elements/element.js";
+import { K_Validator } from "./elements/validator.js";
 import { K_ObjectSchema, K_ValidationError, K_ValidationResult } from "./types.js";
 
 export function prependArrayIndex(error: K_ValidationError, index: number) {
@@ -59,7 +59,7 @@ export function indexElements(
   return elements;
 }
 
-function isElement(value: K_ObjectSchema | K_Element<unknown>): value is K_Element<unknown> {
+function isElement(value: K_ObjectSchema | K_Validator<unknown>): value is K_Validator<unknown> {
   return typeof value.validate === "function";
 }
 
