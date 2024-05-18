@@ -5,29 +5,29 @@ import { K_AsyncValidationCheck, K_ValidationCheck, K_ValidationResult } from ".
 export abstract class K_Validator<T> {
   protected nestedElements: K_Validator<unknown>[] = [];
 
-  protected validators: K_ValidationCheck[] = [];
-  protected asyncValidators: K_AsyncValidationCheck[] = [];
+  protected checks: K_ValidationCheck[] = [];
+  protected asyncChecks: K_AsyncValidationCheck[] = [];
 
   protected addNestedElement(nested: K_Validator<unknown>) {
     this.nestedElements.push(nested);
   }
 
-  protected getAsyncValidators(): K_AsyncValidationCheck[] {
+  protected getAsyncChecks(): K_AsyncValidationCheck[] {
     return [
-      ...this.asyncValidators,
-      ...this.nestedElements.map((nested) => nested.getAsyncValidators()).flat(),
+      ...this.asyncChecks,
+      ...this.nestedElements.map((nested) => nested.getAsyncChecks()).flat(),
     ];
   }
 
-  protected addValidator(validator: K_ValidationCheck) {
-    this.validators.push(validator);
+  protected addCheck(validator: K_ValidationCheck) {
+    this.checks.push(validator);
   }
 
   /**
    * Adds a custom validation function which adds an error with the given message if it returns false.
    */
   public custom(test: (data: unknown) => boolean, message: string) {
-    this.validators.push((data, container) => {
+    this.checks.push((data, container) => {
       if (!test(data)) {
         container.addNewError(ROOT_SYMBOL, message);
       }
@@ -39,7 +39,7 @@ export abstract class K_Validator<T> {
    * Adds a custom async validation function which adds an error with the given message if the promise resolves to false.
    */
   public customAsync(test: (data: unknown) => Promise<boolean>, message: string) {
-    this.asyncValidators.push(async (data, container) => {
+    this.asyncChecks.push(async (data, container) => {
       const passed = await test(data);
       if (!passed) {
         container.addNewError(ROOT_SYMBOL, message);
@@ -54,7 +54,7 @@ export abstract class K_Validator<T> {
   public validate(data: unknown): K_ValidationResult<T> {
     const container = new K_ValidationContainer();
 
-    for (const validator of this.validators) {
+    for (const validator of this.checks) {
       validator(data, container);
       if (container.markedForEarlyApproval) {
         return container.toValidResponse<T>(data);
@@ -74,14 +74,14 @@ export abstract class K_Validator<T> {
   public async validateAsync(data: unknown): Promise<K_ValidationResult<T>> {
     const container = new K_ValidationContainer();
 
-    for (const validator of this.validators) {
+    for (const validator of this.checks) {
       validator(data, container);
       if (container.markedForEarlyApproval) {
         return container.toValidResponse<T>(data);
       }
     }
 
-    await Promise.all(this.getAsyncValidators().map((validator) => validator(data, container)));
+    await Promise.all(this.getAsyncChecks().map((validator) => validator(data, container)));
 
     if (container.isValid()) {
       return container.toValidResponse<T>(data);

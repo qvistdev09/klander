@@ -7,7 +7,7 @@ export class K_Nullable<T> extends K_Validator<T | null> {
 
     this.addNestedElement(element);
 
-    this.addValidator((data, container) => {
+    this.addCheck((data, container) => {
       if (data === null) {
         return container.markForApproval();
       }

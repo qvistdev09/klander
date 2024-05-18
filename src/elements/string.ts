@@ -4,7 +4,7 @@ import { K_Validator } from "./validator.js";
 export class K_String<T extends string = string> extends K_Validator<T> {
   constructor() {
     super();
-    this.addValidator((data, container) => {
+    this.addCheck((data, container) => {
       if (typeof data !== "string") {
         container.addNewError(ROOT_SYMBOL, "Value must be a string");
       }
@@ -15,7 +15,7 @@ export class K_String<T extends string = string> extends K_Validator<T> {
    * Enforces a minimum length for the string.
    */
   public min(min: number) {
-    this.addValidator((data, container) => {
+    this.addCheck((data, container) => {
       if (typeof data === "string" && data.length < min) {
         container.addNewError(ROOT_SYMBOL, `Value must have a minimum of ${min} characters`);
       }
@@ -27,7 +27,7 @@ export class K_String<T extends string = string> extends K_Validator<T> {
    * Enforces a maximum length for the string.
    */
   public max(max: number) {
-    this.addValidator((data, container) => {
+    this.addCheck((data, container) => {
       if (typeof data === "string" && data.length > max) {
         container.addNewError(ROOT_SYMBOL, `Value must not have more than ${max} characters`);
       }
@@ -39,7 +39,7 @@ export class K_String<T extends string = string> extends K_Validator<T> {
    * Enforces a regex pattern for the string.
    */
   public pattern(pattern: RegExp) {
-    this.addValidator((data, container) => {
+    this.addCheck((data, container) => {
       if (typeof data === "string" && !pattern.test(data)) {
         container.addNewError(ROOT_SYMBOL, `Value must match pattern ${pattern.source}`);
       }
@@ -51,7 +51,7 @@ export class K_String<T extends string = string> extends K_Validator<T> {
    * Ensures that the string is one of the given values.
    */
   public enum<T extends string>(...values: [T, ...T[]]) {
-    this.addValidator((data, container) => {
+    this.addCheck((data, container) => {
       if (typeof data === "string" && !(values as string[]).includes(data)) {
         container.addNewError(
           ROOT_SYMBOL,

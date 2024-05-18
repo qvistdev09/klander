@@ -12,7 +12,7 @@ export class K_OneOf<T extends [K_Validator<any>, ...K_Validator<any>[]]> extend
       this.addNestedElement(oneOf);
     }
 
-    this.addValidator((data, container) => {
+    this.addCheck((data, container) => {
       const errorSets: K_FailureResult[] = [];
       for (const oneOf of this.oneOfs) {
         const result = oneOf.validate(data);

@@ -8,7 +8,7 @@ export class K_Array<T> extends K_Validator<T[]> {
 
     this.addNestedElement(element);
 
-    this.addValidator((data, container) => {
+    this.addCheck((data, container) => {
       if (!Array.isArray(data)) {
         container.addNewError(ROOT_SYMBOL, "Value must be an array");
       } else {
@@ -25,7 +25,7 @@ export class K_Array<T> extends K_Validator<T[]> {
    * Validates that the array has a minimum of elements.
    */
   public minItems(min: number, message?: string) {
-    this.addValidator((data, container) => {
+    this.addCheck((data, container) => {
       if (Array.isArray(data) && data.length < min) {
         container.addNewError(
           ROOT_SYMBOL,
@@ -40,7 +40,7 @@ export class K_Array<T> extends K_Validator<T[]> {
    * Validates that the array does not have more than the allowed maximum of elements.
    */
   public maxItems(max: number, message?: string) {
-    this.addValidator((data, container) => {
+    this.addCheck((data, container) => {
       if (Array.isArray(data) && data.length > max) {
         container.addNewError(
           ROOT_SYMBOL,

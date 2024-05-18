@@ -19,7 +19,7 @@ export class K_Object<T extends K_ObjectSchema> extends K_Validator<U_Inferred<T
       this.addNestedElement(element.validator);
     }
 
-    this.addValidator((data, container) => {
+    this.addCheck((data, container) => {
       for (const { validator, locationFragments, location } of this.elements) {
         const nestedValue = getNestedValue(locationFragments, data);
         const result = validator.validate(nestedValue);
