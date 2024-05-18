@@ -16,6 +16,20 @@ export type K_AsyncValidationCheck = (
   container: K_ValidationContainer
 ) => Promise<void>;
 
-export type FlatType<T> = T extends object ? { [K in keyof T]: FlatType<T[K]> } : T;
+type U_FlattenException =
+  | Date
+  | RegExp
+  | Function
+  | Array<any>
+  | Set<any>
+  | Map<any, any>
+  | WeakMap<any, any>
+  | WeakSet<any>;
+
+export type FlatType<T> = T extends U_FlattenException
+  ? T
+  : T extends object
+  ? { [K in keyof T]: FlatType<T[K]> }
+  : T;
 
 export type K_ObjectSchema = { [key: string]: K_Element<unknown> | K_ObjectSchema };
