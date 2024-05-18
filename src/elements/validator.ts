@@ -12,17 +12,11 @@ export abstract class K_Validator<T> {
     this.nestedElements.push(nested);
   }
 
-  protected getAsyncValidators() {
-    const asyncValidators: K_AsyncValidationCheck[] = [];
-    for (const validator of this.asyncValidators) {
-      asyncValidators.push(validator);
-    }
-    for (const nested of this.nestedElements) {
-      for (const nestedValidator of nested.getAsyncValidators()) {
-        asyncValidators.push(nestedValidator);
-      }
-    }
-    return asyncValidators;
+  protected getAsyncValidators(): K_AsyncValidationCheck[] {
+    return [
+      ...this.asyncValidators,
+      ...this.nestedElements.map((nested) => nested.getAsyncValidators()).flat(),
+    ];
   }
 
   protected addValidator(validator: K_ValidationCheck) {
