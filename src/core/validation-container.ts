@@ -1,3 +1,4 @@
+import { ROOT_SYMBOL } from "../consts.js";
 import { K_ValidationError, K_ValidationResult } from "../types.js";
 
 export class K_ValidationContainer {
@@ -26,5 +27,26 @@ export class K_ValidationContainer {
 
   public toErrorResponse<T>(): K_ValidationResult<T> {
     return { valid: false, errors: this.errors };
+  }
+
+  public prependArrayIndexToErrors(index: number) {
+    this.errors.forEach((error) => {
+      error.location =
+        error.location === ROOT_SYMBOL
+          ? `[${index.toString()}]`
+          : `[${index.toString()}].${error.location}`;
+    });
+  }
+
+  public contextualizeErrors(location: string) {
+    this.errors.forEach((error) => {
+      error.location = error.location === ROOT_SYMBOL ? location : `${location}.${error.location}`;
+    });
+  }
+
+  public absorbContainer(target: K_ValidationContainer) {
+    target.errors.forEach((error) => {
+      this.addExistingError(error);
+    });
   }
 }

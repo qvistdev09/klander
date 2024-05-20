@@ -1,23 +1,33 @@
 import { ROOT_SYMBOL } from "../consts.js";
-import { mergeResultIntoContainer, prependArrayIndexToResult } from "../utils.js";
-import { K_Validator } from "./validator.js";
+import { K_Validator, U_ValidatorInternal } from "./validator.js";
 
 export class K_Array<T> extends K_Validator<T[]> {
-  constructor(private element: K_Validator<T>) {
-    super();
+  private element: U_ValidatorInternal<T>;
 
-    this.addNestedElement(element);
+  constructor(element: K_Validator<T>) {
+    super();
+    this.element = element as U_ValidatorInternal<T>;
 
     this.addCheck((data, container) => {
       if (!Array.isArray(data)) {
         container.addNewError(ROOT_SYMBOL, "Value must be an array");
       } else {
-        for (const [index, arrayElement] of data.entries()) {
-          const result = this.element.validate(arrayElement);
-          prependArrayIndexToResult(result, index);
-          mergeResultIntoContainer(container, result);
-        }
+        data.forEach((arrayElement, index) => {
+          const elementValidation = this.element.runSyncChecks(arrayElement);
+          elementValidation.prependArrayIndexToErrors(index);
+          container.absorbContainer(elementValidation);
+        });
       }
+    });
+
+    this.addAsyncCheck(async (data, container) => {
+      await Promise.all(
+        data.map(async (arrayElement, index) => {
+          const elementValidation = await this.element.runAsyncChecks(arrayElement);
+          elementValidation.prependArrayIndexToErrors(index);
+          container.absorbContainer(elementValidation);
+        })
+      );
     });
   }
 

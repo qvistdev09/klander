@@ -1,11 +1,6 @@
 import { K_IndexedElement } from "../core/indexed-element.js";
 import { FlatType as U_FlatType, K_ObjectSchema } from "../types.js";
-import {
-  contextualizeResultErrors,
-  getNestedValue,
-  indexElements,
-  mergeResultIntoContainer,
-} from "../utils.js";
+import { getNestedValue, indexElements } from "../utils.js";
 import { K_Validator } from "./validator.js";
 
 export class K_Object<T extends K_ObjectSchema> extends K_Validator<U_Inferred<T>> {
@@ -15,17 +10,24 @@ export class K_Object<T extends K_ObjectSchema> extends K_Validator<U_Inferred<T
     super();
     this.elements = indexElements(objectSchema);
 
-    for (const element of this.elements) {
-      this.addNestedElement(element.validator);
-    }
-
     this.addCheck((data, container) => {
       for (const { validator, locationFragments, location } of this.elements) {
         const nestedValue = getNestedValue(locationFragments, data);
-        const result = validator.validate(nestedValue);
-        contextualizeResultErrors(result, location);
-        mergeResultIntoContainer(container, result);
+        const elementValidation = validator.runSyncChecks(nestedValue);
+        elementValidation.contextualizeErrors(location);
+        container.absorbContainer(elementValidation);
       }
+    });
+
+    this.addAsyncCheck(async (data, container) => {
+      await Promise.all(
+        this.elements.map(async ({ validator, locationFragments, location }) => {
+          const nestedValue = getNestedValue(locationFragments, data);
+          const elementValidation = await validator.runAsyncChecks(nestedValue);
+          elementValidation.contextualizeErrors(location);
+          container.absorbContainer(elementValidation);
+        })
+      );
     });
   }
 }

@@ -11,6 +11,13 @@ export type K_ValidationResult<T> = K_ValidResult<T> | K_FailureResult;
 
 export type K_ValidationCheck = (data: unknown, container: K_ValidationContainer) => void;
 
+export type K_CustomValidationCheck<T> = (data: T, container: K_ValidationContainer) => void;
+
+export type K_AsyncCustomValidationCheck<T> = (
+  data: T,
+  container: K_ValidationContainer
+) => Promise<void>;
+
 export type K_AsyncValidationCheck = (
   data: unknown,
   container: K_ValidationContainer
@@ -32,4 +39,4 @@ export type FlatType<T> = T extends U_FlattenException
   ? { [K in keyof T]: FlatType<T[K]> }
   : T;
 
-export type K_ObjectSchema = { [key: string]: K_Validator<unknown> | K_ObjectSchema };
+export type K_ObjectSchema = { [key: string]: K_Validator<any> | K_ObjectSchema };

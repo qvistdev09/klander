@@ -4,6 +4,7 @@ import { array, number, object, string } from "../index.js";
 
 test("object validator should produce correct paths to nested elements", () => {
   const book = object({ author: { name: string() } });
+
   const data = { author: { name: 12 } };
 
   const result = book.validate(data);

@@ -1,46 +1,6 @@
-import { ROOT_SYMBOL } from "./consts.js";
 import { K_IndexedElement } from "./core/indexed-element.js";
-import { K_ValidationContainer } from "./core/validation-container.js";
-import { K_Validator } from "./elements/validator.js";
-import { K_ObjectSchema, K_ValidationError, K_ValidationResult } from "./types.js";
-
-export function prependArrayIndex(error: K_ValidationError, index: number) {
-  error.location =
-    error.location === ROOT_SYMBOL
-      ? `[${index.toString()}]`
-      : `[${index.toString()}].${error.location}`;
-}
-
-export function prependArrayIndexToResult(result: K_ValidationResult<unknown>, index: number) {
-  if (!result.valid) {
-    for (const error of result.errors) {
-      prependArrayIndex(error, index);
-    }
-  }
-}
-
-export function contextualizeErrorLocation(error: K_ValidationError, location: string) {
-  error.location = error.location === ROOT_SYMBOL ? location : `${location}.${error.location}`;
-}
-
-export function contextualizeResultErrors(result: K_ValidationResult<unknown>, location: string) {
-  if (!result.valid) {
-    for (const error of result.errors) {
-      contextualizeErrorLocation(error, location);
-    }
-  }
-}
-
-export function mergeResultIntoContainer(
-  container: K_ValidationContainer,
-  result: K_ValidationResult<unknown>
-) {
-  if (!result.valid) {
-    for (const error of result.errors) {
-      container.addExistingError(error);
-    }
-  }
-}
+import { K_Validator, U_ValidatorInternal } from "./elements/validator.js";
+import { K_ObjectSchema } from "./types.js";
 
 export function indexElements(
   object: K_ObjectSchema,
@@ -51,7 +11,7 @@ export function indexElements(
     const element = object[key];
     if (isElement(element)) {
       const location = [...locationFragments, key];
-      elements.push(new K_IndexedElement(location, element));
+      elements.push(new K_IndexedElement(location, element as U_ValidatorInternal<unknown>));
     } else {
       indexElements(element, elements, [...locationFragments, key]);
     }

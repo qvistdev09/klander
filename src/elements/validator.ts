@@ -1,48 +1,67 @@
 import { ROOT_SYMBOL } from "../consts.js";
 import { K_ValidationContainer } from "../core/validation-container.js";
-import { K_AsyncValidationCheck, K_ValidationCheck, K_ValidationResult } from "../types.js";
+import {
+  K_AsyncCustomValidationCheck,
+  K_CustomValidationCheck,
+  K_ValidationCheck,
+  K_ValidationResult,
+} from "../types.js";
 
 export abstract class K_Validator<T> {
-  protected nestedElements: K_Validator<unknown>[] = [];
-
   protected checks: K_ValidationCheck[] = [];
-  protected asyncChecks: K_AsyncValidationCheck[] = [];
-
-  protected addNestedElement(nested: K_Validator<unknown>) {
-    this.nestedElements.push(nested);
-  }
-
-  protected getAsyncChecks(): K_AsyncValidationCheck[] {
-    return [
-      ...this.asyncChecks,
-      ...this.nestedElements.map((nested) => nested.getAsyncChecks()).flat(),
-    ];
-  }
+  protected customChecks: K_CustomValidationCheck<T>[] = [];
+  protected asyncCustomChecks: K_AsyncCustomValidationCheck<T>[] = [];
 
   protected addCheck(validator: K_ValidationCheck) {
     this.checks.push(validator);
+    return this;
+  }
+
+  protected addAsyncCheck(check: K_AsyncCustomValidationCheck<T>) {
+    this.asyncCustomChecks.push(check);
+    return this;
+  }
+
+  protected runSyncChecks(
+    data: unknown,
+    container: K_ValidationContainer = new K_ValidationContainer()
+  ) {
+    this.checks.forEach((check) => check(data, container));
+    if (container.isValid()) {
+      this.customChecks.forEach((check) => check(data as T, container));
+    }
+    return container;
+  }
+
+  protected async runAsyncChecks(
+    data: T,
+    container: K_ValidationContainer = new K_ValidationContainer()
+  ) {
+    await Promise.all(this.asyncCustomChecks.map((check) => check(data, container)));
+    return container;
   }
 
   /**
-   * Adds a custom validation function which adds an error with the given message if it returns false.
+   * Adds a custom validation check. It should return a string with an error message when invalid, otherwise return void.
    */
-  public custom(test: (data: unknown) => boolean, message: string) {
-    this.checks.push((data, container) => {
-      if (!test(data)) {
-        container.addNewError(ROOT_SYMBOL, message);
+  public custom(check: CustomCheck<T>) {
+    this.customChecks.push((data, container) => {
+      const output = check(data);
+      if (typeof output === "string") {
+        container.addNewError(ROOT_SYMBOL, output);
       }
     });
     return this;
   }
 
   /**
-   * Adds a custom async validation function which adds an error with the given message if the promise resolves to false.
+   * Adds a custom async validation check. It should return a string with an error message when invalid, otherwise return void.
    */
-  public customAsync(test: (data: unknown) => Promise<boolean>, message: string) {
-    this.asyncChecks.push(async (data, container) => {
-      const passed = await test(data);
-      if (!passed) {
-        container.addNewError(ROOT_SYMBOL, message);
+  public customAsync(check: CustomAsyncCheck<T>) {
+    this.asyncCustomChecks.push(async (data, container) => {
+      const output = await check(data);
+      if (typeof output === "string") {
+        container.addNewError(ROOT_SYMBOL, output);
       }
     });
     return this;
@@ -52,41 +71,34 @@ export abstract class K_Validator<T> {
    * Validates an unknown value and returns a validation result. Async validations are ignored when using this function. To include async checks, {@link validateAsync}.
    */
   public validate(data: unknown): K_ValidationResult<T> {
-    const container = new K_ValidationContainer();
+    const container = this.runSyncChecks(data);
 
-    for (const validator of this.checks) {
-      validator(data, container);
-      if (container.markedForEarlyApproval) {
-        return container.toValidResponse<T>(data);
-      }
-    }
-
-    if (container.isValid()) {
-      return container.toValidResponse<T>(data);
-    }
-
-    return container.toErrorResponse<T>();
+    return container.isValid()
+      ? container.toValidResponse<T>(data)
+      : container.toErrorResponse<T>();
   }
 
   /**
    * Validates any value and returns a validation result. Includes async validations.
    */
   public async validateAsync(data: unknown): Promise<K_ValidationResult<T>> {
-    const container = new K_ValidationContainer();
-
-    for (const validator of this.checks) {
-      validator(data, container);
-      if (container.markedForEarlyApproval) {
-        return container.toValidResponse<T>(data);
-      }
-    }
-
-    await Promise.all(this.getAsyncChecks().map((validator) => validator(data, container)));
+    const container = this.runSyncChecks(data);
 
     if (container.isValid()) {
-      return container.toValidResponse<T>(data);
+      await this.runAsyncChecks(data as T, container);
     }
 
-    return container.toErrorResponse<T>();
+    return container.isValid()
+      ? container.toValidResponse<T>(data)
+      : container.toErrorResponse<T>();
   }
 }
+
+type CustomCheck<T> = (data: T) => string | void;
+
+type CustomAsyncCheck<T> = (data: T) => Promise<string | void>;
+
+export type U_ValidatorInternal<T> = K_Validator<T> & {
+  runSyncChecks: (data: unknown, container?: K_ValidationContainer) => K_ValidationContainer;
+  runAsyncChecks: (data: T, container?: K_ValidationContainer) => Promise<K_ValidationContainer>;
+};

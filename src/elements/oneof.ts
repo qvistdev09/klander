@@ -1,28 +1,26 @@
-import { K_FailureResult } from "../types.js";
-import { mergeResultIntoContainer } from "../utils.js";
-import { K_Validator } from "./validator.js";
+import { K_ValidationContainer } from "../core/validation-container.js";
+import { K_Validator, U_ValidatorInternal } from "./validator.js";
 
 export class K_OneOf<T extends [K_Validator<any>, ...K_Validator<any>[]]> extends K_Validator<
   MapInnerElementTypes<T>[number]
 > {
-  constructor(private oneOfs: T) {
-    super();
+  private oneOfs: U_ValidatorInternal<any>[];
 
-    for (const oneOf of oneOfs) {
-      this.addNestedElement(oneOf);
-    }
+  constructor(oneOfs: T) {
+    super();
+    this.oneOfs = oneOfs as unknown as U_ValidatorInternal<any>[];
 
     this.addCheck((data, container) => {
-      const errorSets: K_FailureResult[] = [];
+      const containers: K_ValidationContainer[] = [];
       for (const oneOf of this.oneOfs) {
-        const result = oneOf.validate(data);
-        if (result.valid) {
+        const result = oneOf.runSyncChecks(data);
+        if (result.isValid()) {
           return container.markForApproval();
         }
-        errorSets.push(result);
+        containers.push(result);
       }
-      errorSets.sort((a, b) => a.errors.length - b.errors.length);
-      mergeResultIntoContainer(container, errorSets[0]);
+      containers.sort((a, b) => a.errors.length - b.errors.length);
+      container.absorbContainer(containers[0]);
     });
   }
 }
