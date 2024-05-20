@@ -15,12 +15,20 @@ export class K_OneOf<T extends [K_Validator<any>, ...K_Validator<any>[]]> extend
       for (const oneOf of this.oneOfs) {
         const result = oneOf.runSyncChecks(data);
         if (result.isValid()) {
+          container.setReferencedValidator(oneOf);
           return container.markForApproval();
         }
         containers.push(result);
       }
       containers.sort((a, b) => a.errors.length - b.errors.length);
       container.absorbContainer(containers[0]);
+    });
+
+    this.addAsyncCheck(async (data, container) => {
+      const validOneOf = this.oneOfs.find((oneOf) => oneOf === container.validatorReference);
+      if (validOneOf) {
+        await validOneOf.runAsyncChecks(data, container);
+      }
     });
   }
 }

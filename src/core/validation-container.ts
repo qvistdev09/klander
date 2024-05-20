@@ -1,9 +1,15 @@
 import { ROOT_SYMBOL } from "../consts.js";
+import { U_ValidatorInternal } from "../elements/validator.js";
 import { K_ValidationError, K_ValidationResult } from "../types.js";
 
 export class K_ValidationContainer {
   public errors: K_ValidationError[] = [];
   public markedForEarlyApproval: boolean = false;
+  public validatorReference: U_ValidatorInternal<any> | null = null;
+
+  public setReferencedValidator(validator: U_ValidatorInternal<any>) {
+    this.validatorReference = validator;
+  }
 
   public isValid() {
     return this.errors.length === 0;
