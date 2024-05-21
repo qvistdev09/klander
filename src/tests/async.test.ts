@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { array, number, object, string } from "../index.js";
+import { array, number, object, oneOf, string } from "../index.js";
 
 (async () => {
   await test("custom async checks should only be called when the normal checks are valid", async () => {
@@ -89,5 +89,25 @@ import { array, number, object, string } from "../index.js";
         `Did not find the expected error with location '${expected.location}' and message '${expected.message}'`
       );
     }
+  });
+
+  await test("when using oneOf, only the async checks in the passing validator should be used", async () => {
+    let aHasBeenCalled = false;
+    let bHasBeenCalled = false;
+
+    const a = object({ name: string() }).customAsync(async () => {
+      aHasBeenCalled = true;
+    });
+
+    const b = object({ age: number() }).customAsync(async () => {
+      bHasBeenCalled = true;
+    });
+
+    const schema = oneOf(a, b);
+
+    await schema.validateAsync({ name: "test" });
+
+    assert.equal(aHasBeenCalled, true);
+    assert.equal(bHasBeenCalled, false);
   });
 })();
