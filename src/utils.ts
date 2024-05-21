@@ -20,7 +20,7 @@ export function indexElements(
 }
 
 function isElement(value: K_ObjectSchema | K_Validator<unknown>): value is K_Validator<unknown> {
-  return typeof value.validate === "function";
+  return value instanceof K_Validator;
 }
 
 export function getNestedValue(locationFragments: string[], object: unknown) {
