@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { array, number, object, string } from "../index.js";
+import { array, number, object, oneOf, string } from "../index.js";
 
 test("object validator should produce correct paths to nested elements", () => {
   const book = object({ author: { name: string() } });
@@ -14,6 +14,43 @@ test("object validator should produce correct paths to nested elements", () => {
   }
 
   assert.equal(result.errors[0].location, "author.name");
+});
+
+test("object validator should produce correct paths to deeply nested elements (arrays of objects with inner arrays)", () => {
+  const schema = object({
+    person: { hobbies: array(object({ id: { no: array(object({ location: string() })) } })) },
+    address: string(),
+  });
+
+  const value = {
+    person: {
+      hobbies: [{ id: { no: [{ location: 25 }] } }],
+    },
+    address: "test",
+  };
+
+  const expectedPath = "person.hobbies.[0].id.no.[0].location";
+
+  const validationResult = schema.validate(value);
+
+  assert.equal(validationResult.valid, false);
+  assert.equal(validationResult.errors[0].location, expectedPath);
+});
+
+test("object validator should produce correct paths when inner elements use oneOf", () => {
+
+  const schema = object({
+    branch: oneOf(object({ name: string() }), object({ id: number(), order: number() })),
+  });
+
+  const data = { branch: { name: 25 } };
+
+  const validationResult = schema.validate(data);
+
+  const expectedPath = "branch.name";
+
+  assert.equal(validationResult.valid, false);
+  assert.equal(validationResult.errors[0].location, expectedPath);
 });
 
 test("object validator should produce correct paths to array elements", () => {
