@@ -11,20 +11,20 @@ export class K_Object<T extends K_ObjectSchema> extends K_Validator<U_Inferred<T
     this.elements = indexElements(objectSchema);
 
     this.addCheck((data, container) => {
-      for (const { validator, locationFragments, location } of this.elements) {
-        const nestedValue = getNestedValue(locationFragments, data);
-        const elementValidation = validator.runSyncChecks(nestedValue);
-        elementValidation.contextualizeErrors(location);
+      this.elements.forEach((element) => {
+        const nestedValue = getNestedValue(element.locationFragments, data);
+        const elementValidation = element.validator.runSyncChecks(nestedValue);
+        elementValidation.contextualizeErrors(element.location);
         container.absorbContainer(elementValidation);
-      }
+      });
     });
 
     this.addAsyncCheck(async (data, container) => {
       await Promise.all(
-        this.elements.map(async ({ validator, locationFragments, location }) => {
-          const nestedValue = getNestedValue(locationFragments, data);
-          const elementValidation = await validator.runAsyncChecks(nestedValue);
-          elementValidation.contextualizeErrors(location);
+        this.elements.map(async (element) => {
+          const nestedValue = getNestedValue(element.locationFragments, data);
+          const elementValidation = await element.validator.runAsyncChecks(nestedValue);
+          elementValidation.contextualizeErrors(element.location);
           container.absorbContainer(elementValidation);
         })
       );
