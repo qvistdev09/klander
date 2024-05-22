@@ -36,3 +36,14 @@ test("array validator should mark non-arrays as invalid", () => {
   assert.equal(validator.validate("2").valid, false);
   assert.equal(validator.validate(new Set()).valid, false);
 });
+
+test("array: immutability checks", () => {
+  const withoutMin = array(string());
+  const withMin = withoutMin.minItems(2);
+
+  const result = withoutMin.validate(["test"]);
+
+  assert.ok(result.valid);
+
+  assert.notEqual(withoutMin, withMin);
+});
