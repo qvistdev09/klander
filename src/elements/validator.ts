@@ -1,4 +1,5 @@
 import { ROOT_SYMBOL } from "../consts.js";
+import { K_Template } from "../core/template.js";
 import { K_ValidationContainer } from "../core/validation-container.js";
 import {
   K_AsyncCustomValidationCheck,
@@ -12,8 +13,19 @@ export abstract class K_Validator<T> {
   protected customChecks: K_CustomValidationCheck<T>[] = [];
   protected asyncCustomChecks: K_AsyncCustomValidationCheck<T>[] = [];
 
+  protected clone() {
+    return new (this as any).constructor(new K_Template(this)) as typeof this;
+  }
+
   protected addCheck(validator: K_ValidationCheck) {
     this.checks.push(validator);
+    return this;
+  }
+
+  protected copyChecks(target: K_Validator<any>) {
+    this.checks = [...target.checks];
+    this.customChecks = [...target.customChecks];
+    this.asyncCustomChecks = [...target.asyncCustomChecks];
     return this;
   }
 

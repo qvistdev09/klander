@@ -1,3 +1,4 @@
+import { K_Template } from "../core/template.js";
 import { K_ValidationContainer } from "../core/validation-container.js";
 import { K_Validator, U_ValidatorInternal } from "./validator.js";
 
@@ -6,9 +7,16 @@ export class K_OneOf<T extends [K_Validator<any>, ...K_Validator<any>[]]> extend
 > {
   private oneOfs: U_ValidatorInternal<any>[];
 
-  constructor(oneOfs: T) {
+  constructor(input: T | K_Template<K_OneOf<T>>) {
     super();
-    this.oneOfs = oneOfs as unknown as U_ValidatorInternal<any>[];
+
+    if (input instanceof K_Template) {
+      this.oneOfs = [...input.template.oneOfs];
+      this.copyChecks(input.template);
+      return;
+    }
+
+    this.oneOfs = input as unknown as U_ValidatorInternal<any>[];
 
     this.addCheck((data, container) => {
       const containers: K_ValidationContainer[] = [];
