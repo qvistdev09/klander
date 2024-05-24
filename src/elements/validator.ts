@@ -22,6 +22,16 @@ export abstract class K_Validator<T> {
     return this;
   }
 
+  protected addCustomCheck(validator: K_CustomValidationCheck<T>) {
+    this.customChecks.push(validator);
+    return this;
+  }
+
+  protected addCustomAsync(validator: K_AsyncCustomValidationCheck<T>) {
+    this.asyncCustomChecks.push(validator);
+    return this;
+  }
+
   protected copyChecks(target: K_Validator<any>) {
     this.checks = [...target.checks];
     this.customChecks = [...target.customChecks];
@@ -57,26 +67,24 @@ export abstract class K_Validator<T> {
    * Adds a custom validation check. It should return a string with an error message when invalid, otherwise return void.
    */
   public custom(check: CustomCheck<T>) {
-    this.customChecks.push((data, container) => {
+    return this.clone().addCustomCheck((data, container) => {
       const output = check(data);
       if (typeof output === "string") {
         container.addNewError(ROOT_SYMBOL, output);
       }
     });
-    return this;
   }
 
   /**
    * Adds a custom async validation check. It should return a string with an error message when invalid, otherwise return void.
    */
   public customAsync(check: CustomAsyncCheck<T>) {
-    this.asyncCustomChecks.push(async (data, container) => {
+    return this.clone().addCustomAsync(async (data, container) => {
       const output = await check(data);
       if (typeof output === "string") {
         container.addNewError(ROOT_SYMBOL, output);
       }
     });
-    return this;
   }
 
   /**
