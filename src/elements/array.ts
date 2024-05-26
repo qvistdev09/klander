@@ -42,7 +42,7 @@ export class K_Array<T> extends K_Validator<T[]> {
   /**
    * Validates that the array has a minimum of elements.
    */
-  public minItems(min: number, message?: string) {
+  public minItems = (min: number, message?: string) => {
     return this.clone().addCheck((data, container) => {
       if (Array.isArray(data) && data.length < min) {
         container.addNewError(
@@ -51,12 +51,12 @@ export class K_Array<T> extends K_Validator<T[]> {
         );
       }
     });
-  }
+  };
 
   /**
    * Validates that the array does not have more than the allowed maximum of elements.
    */
-  public maxItems(max: number, message?: string) {
+  public maxItems = (max: number, message?: string) => {
     return this.clone().addCheck((data, container) => {
       if (Array.isArray(data) && data.length > max) {
         container.addNewError(
@@ -65,5 +65,5 @@ export class K_Array<T> extends K_Validator<T[]> {
         );
       }
     });
-  }
+  };
 }

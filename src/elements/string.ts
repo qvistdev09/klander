@@ -21,40 +21,40 @@ export class K_String<T extends string = string> extends K_Validator<T> {
   /**
    * Enforces a minimum length for the string.
    */
-  public min(min: number) {
+  public min = (min: number) => {
     return this.clone().addCheck((data, container) => {
       if (typeof data === "string" && data.length < min) {
         container.addNewError(ROOT_SYMBOL, `Value must have a minimum of ${min} characters`);
       }
     });
-  }
+  };
 
   /**
    * Enforces a maximum length for the string.
    */
-  public max(max: number) {
+  public max = (max: number) => {
     return this.clone().addCheck((data, container) => {
       if (typeof data === "string" && data.length > max) {
         container.addNewError(ROOT_SYMBOL, `Value must not have more than ${max} characters`);
       }
     });
-  }
+  };
 
   /**
    * Enforces a regex pattern for the string.
    */
-  public pattern(pattern: RegExp) {
+  public pattern = (pattern: RegExp) => {
     return this.clone().addCheck((data, container) => {
       if (typeof data === "string" && !pattern.test(data)) {
         container.addNewError(ROOT_SYMBOL, `Value must match pattern ${pattern.source}`);
       }
     });
-  }
+  };
 
   /**
    * Ensures that the string is one of the given values.
    */
-  public enum<T extends string>(...values: [T, ...T[]]) {
+  public enum = <T extends string>(...values: [T, ...T[]]) => {
     return this.clone().addCheck((data, container) => {
       if (typeof data === "string" && !(values as string[]).includes(data)) {
         container.addNewError(
@@ -63,5 +63,5 @@ export class K_String<T extends string = string> extends K_Validator<T> {
         );
       }
     }) as unknown as K_String<T>;
-  }
+  };
 }

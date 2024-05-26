@@ -1,9 +1,9 @@
 import { U_ValidatorInternal } from "../elements/validator";
 
 export class K_IndexedElement {
-  constructor(public locationFragments: string[], public validator: U_ValidatorInternal<unknown>) {}
+  public location: string;
 
-  public get location() {
-    return this.locationFragments.join(".");
+  constructor(public locationFragments: string[], public validator: U_ValidatorInternal<unknown>) {
+    this.location = locationFragments.join(".");
   }
 }
