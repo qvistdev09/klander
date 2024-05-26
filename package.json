@@ -27,6 +27,7 @@
     "typescript": "^5.4.5"
   },
   "files": [
+    "CHANGELOG.MD",
     "dist/**/*",
     "!dist/tests/**/*"
   ]
