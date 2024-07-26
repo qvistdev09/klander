@@ -16,8 +16,8 @@ test("oneOf should accept values that are one of the inner elements", () => {
 
 test("if the value is not valid against any of the inner elements, the errors should be listed for the element with the least amount of errors", () => {
   const validator = oneOf(
-    object({ name: string().enum("John"), age: number() }),
-    object({ name: string().enum("John") })
+    object({ name: string().enum(["John"]), age: number() }),
+    object({ name: string().enum(["John"]) })
   );
 
   const result = validator.validate({ name: "Per" });

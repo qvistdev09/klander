@@ -1,6 +1,6 @@
 {
   "name": "klander",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Javascript validation library with typed results",
   "type": "module",
   "main": "dist/index.js",
@@ -29,6 +29,7 @@
   "files": [
     "CHANGELOG.MD",
     "dist/**/*",
+    "!dist/**/*.js.map",
     "!dist/tests/**/*"
   ]
 }

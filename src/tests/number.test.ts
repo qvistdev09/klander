@@ -33,7 +33,7 @@ test("int check should reject numbers with decimals", () => {
 });
 
 test("enum check should reject numbers that are not part of the enum", () => {
-  const validator = number().enum(2, 5);
+  const validator = number().enum([2, 5]);
   const result = validator.validate(3);
   assert.equal(result.valid, false);
 });

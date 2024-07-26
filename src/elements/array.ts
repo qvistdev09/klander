@@ -5,20 +5,22 @@ import { K_Validator, U_ValidatorInternal } from "./validator.js";
 export class K_Array<T> extends K_Validator<T[]> {
   private element: U_ValidatorInternal<T>;
 
-  constructor(validator: K_Validator<T> | K_Template<K_Array<T>>) {
+  constructor(validator: K_Validator<T>, message?: string);
+  constructor(template: K_Template<K_Array<T>>);
+  constructor(templateOrValidator: K_Validator<T> | K_Template<K_Array<T>>, message?: string) {
     super();
 
-    if (validator instanceof K_Template) {
-      this.element = validator.template.element;
-      this.copyChecks(validator.template);
+    if (templateOrValidator instanceof K_Template) {
+      this.element = templateOrValidator.template.element;
+      this.copyChecks(templateOrValidator.template);
       return;
     }
 
-    this.element = validator as U_ValidatorInternal<T>;
+    this.element = templateOrValidator as U_ValidatorInternal<T>;
 
     this.addCheck((data, container) => {
       if (!Array.isArray(data)) {
-        container.addNewError(ROOT_SYMBOL, "Value must be an array");
+        container.addNewError(ROOT_SYMBOL, message ?? "Value must be an array");
       } else {
         data.forEach((arrayElement, index) => {
           const elementValidation = this.element.runSyncChecks(arrayElement);

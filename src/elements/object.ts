@@ -7,16 +7,18 @@ import { K_Validator } from "./validator.js";
 export class K_Object<T extends K_ObjectSchema> extends K_Validator<U_Inferred<T>> {
   private elements: K_IndexedElement[];
 
-  constructor(input: T | K_Template<K_Object<T>>) {
+  constructor(schema: T);
+  constructor(template: K_Template<K_Object<T>>);
+  constructor(schemaOrTemplate: T | K_Template<K_Object<T>>) {
     super();
 
-    if (input instanceof K_Template) {
-      this.elements = [...input.template.elements];
-      this.copyChecks(input.template);
+    if (schemaOrTemplate instanceof K_Template) {
+      this.elements = [...schemaOrTemplate.template.elements];
+      this.copyChecks(schemaOrTemplate.template);
       return;
     }
 
-    this.elements = indexElements(input);
+    this.elements = indexElements(schemaOrTemplate);
 
     this.addCheck((data, container) => {
       this.elements.forEach((element) => {

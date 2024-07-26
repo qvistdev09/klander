@@ -8,13 +8,13 @@ import { array, number, object, oneOf, string } from "../index.js";
     let onInvalid = false;
 
     const name_a = string()
-      .enum("John")
+      .enum(["John"])
       .customAsync(async () => {
         onValid = true;
       });
 
     const name_b = string()
-      .enum("John")
+      .enum(["John"])
       .customAsync(async () => {
         onInvalid = true;
       });

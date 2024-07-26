@@ -7,16 +7,18 @@ export class K_OneOf<T extends [K_Validator<any>, ...K_Validator<any>[]]> extend
 > {
   private oneOfs: U_ValidatorInternal<any>[];
 
-  constructor(input: T | K_Template<K_OneOf<T>>) {
+  constructor(oneOfs: T);
+  constructor(template: K_Template<K_OneOf<T>>);
+  constructor(oneOfsOrTemplate: T | K_Template<K_OneOf<T>>) {
     super();
 
-    if (input instanceof K_Template) {
-      this.oneOfs = [...input.template.oneOfs];
-      this.copyChecks(input.template);
+    if (oneOfsOrTemplate instanceof K_Template) {
+      this.oneOfs = [...oneOfsOrTemplate.template.oneOfs];
+      this.copyChecks(oneOfsOrTemplate.template);
       return;
     }
 
-    this.oneOfs = input as unknown as U_ValidatorInternal<any>[];
+    this.oneOfs = oneOfsOrTemplate as unknown as U_ValidatorInternal<any>[];
 
     this.addCheck((data, container) => {
       const containers: K_ValidationContainer[] = [];

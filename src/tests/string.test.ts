@@ -33,7 +33,7 @@ test("pattern check should reject strings that do not conform to pattern", () =>
 });
 
 test("enum check should reject strings that are not part of the enum", () => {
-  const validator = string().enum("apple", "pear");
+  const validator = string().enum(["apple", "pear"]);
   const result = validator.validate("orange");
   assert.equal(result.valid, false);
 });
