@@ -19,7 +19,7 @@ export function indexElements(
   return elements;
 }
 
-function isElement(value: K_ObjectSchema | K_Validator<unknown>): value is K_Validator<unknown> {
+function isElement(value: K_ObjectSchema | K_Validator<any>): value is K_Validator<any> {
   return value instanceof K_Validator;
 }
 

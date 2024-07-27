@@ -1,17 +1,11 @@
 import { ROOT_SYMBOL } from "../consts.js";
 import { K_Template } from "../core/template.js";
 import { K_ValidationContainer } from "../core/validation-container.js";
-import {
-  K_AsyncCustomValidationCheck,
-  K_CustomValidationCheck,
-  K_ValidationCheck,
-  K_ValidationResult,
-} from "../types.js";
+import { K_AsyncCustomValidationCheck, K_ValidationCheck, K_ValidationResult } from "../types.js";
 
 export abstract class K_Validator<T> {
   protected checks: K_ValidationCheck[] = [];
-  protected customChecks: K_CustomValidationCheck<T>[] = [];
-  protected asyncCustomChecks: K_AsyncCustomValidationCheck<T>[] = [];
+  protected asyncChecks: K_AsyncCustomValidationCheck[] = [];
 
   protected clone = () => {
     return new (this as any).constructor(new K_Template(this)) as typeof this;
@@ -22,25 +16,14 @@ export abstract class K_Validator<T> {
     return this;
   };
 
-  protected addCustomCheck = (validator: K_CustomValidationCheck<T>) => {
-    this.customChecks.push(validator);
-    return this;
-  };
-
-  protected addCustomAsync = (validator: K_AsyncCustomValidationCheck<T>) => {
-    this.asyncCustomChecks.push(validator);
+  protected addAsyncCheck = (check: K_AsyncCustomValidationCheck) => {
+    this.asyncChecks.push(check);
     return this;
   };
 
   protected copyChecks = (target: K_Validator<any>) => {
     this.checks = [...target.checks];
-    this.customChecks = [...target.customChecks];
-    this.asyncCustomChecks = [...target.asyncCustomChecks];
-    return this;
-  };
-
-  protected addAsyncCheck = (check: K_AsyncCustomValidationCheck<T>) => {
-    this.asyncCustomChecks.push(check);
+    this.asyncChecks = [...target.asyncChecks];
     return this;
   };
 
@@ -49,25 +32,22 @@ export abstract class K_Validator<T> {
     container: K_ValidationContainer = new K_ValidationContainer()
   ) => {
     this.checks.forEach((check) => check(data, container));
-    if (container.isValid()) {
-      this.customChecks.forEach((check) => check(data as T, container));
-    }
     return container;
   };
 
   protected runAsyncChecks = async (
-    data: T,
+    data: unknown,
     container: K_ValidationContainer = new K_ValidationContainer()
   ) => {
-    await Promise.all(this.asyncCustomChecks.map((check) => check(data, container)));
+    await Promise.all(this.asyncChecks.map((check) => check(data, container)));
     return container;
   };
 
   /**
    * Adds a custom validation check. It should return a string with an error message when invalid, otherwise return void.
    */
-  public custom = (check: CustomCheck<T>) => {
-    return this.clone().addCustomCheck((data, container) => {
+  public custom = (check: Check) => {
+    return this.clone().addCheck((data, container) => {
       const output = check(data);
       if (typeof output === "string") {
         container.addNewError(ROOT_SYMBOL, output);
@@ -78,8 +58,8 @@ export abstract class K_Validator<T> {
   /**
    * Adds a custom async validation check. It should return a string with an error message when invalid, otherwise return void.
    */
-  public customAsync = (check: CustomAsyncCheck<T>) => {
-    return this.clone().addCustomAsync(async (data, container) => {
+  public customAsync = (check: AsyncCheck) => {
+    return this.clone().addAsyncCheck(async (data, container) => {
       const output = await check(data);
       if (typeof output === "string") {
         container.addNewError(ROOT_SYMBOL, output);
@@ -103,10 +83,7 @@ export abstract class K_Validator<T> {
    */
   public validateAsync = async (data: unknown): Promise<K_ValidationResult<T>> => {
     const container = this.runSyncChecks(data);
-
-    if (container.isValid()) {
-      await this.runAsyncChecks(data as T, container);
-    }
+    await this.runAsyncChecks(data, container);
 
     return container.isValid()
       ? container.toValidResponse<T>(data)
@@ -114,9 +91,9 @@ export abstract class K_Validator<T> {
   };
 }
 
-type CustomCheck<T> = (data: T) => string | void;
+type Check = (data: unknown) => string | void;
 
-type CustomAsyncCheck<T> = (data: T) => Promise<string | void>;
+type AsyncCheck = (data: unknown) => Promise<string | void>;
 
 export type U_ValidatorInternal<T> = K_Validator<T> & {
   runSyncChecks: (data: unknown, container?: K_ValidationContainer) => K_ValidationContainer;

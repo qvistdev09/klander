@@ -31,6 +31,9 @@ export class K_Array<T> extends K_Validator<T[]> {
     });
 
     this.addAsyncCheck(async (data, container) => {
+      if (!Array.isArray(data)) {
+        return;
+      }
       await Promise.all(
         data.map(async (arrayElement, index) => {
           const elementValidation = await this.element.runAsyncChecks(arrayElement);
