@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.6
+
+- fix broken utility type export
+
 ## 0.0.5
 
 - export Infer utility type

@@ -33,5 +33,3 @@ export type FlatType<T> = T extends U_FlattenException
   : T;
 
 export type K_ObjectSchema = { [key: string]: K_Validator<any> | K_ObjectSchema };
-
-export type Infer<T> = T extends K_Validator<infer TS> ? TS : never;
