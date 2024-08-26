@@ -7,6 +7,7 @@ import { K_String } from "./elements/string.js";
 import { K_Validator } from "./elements/validator.js";
 import { K_ObjectSchema } from "./types.js";
 import { K_Number } from "./elements/number.js";
+import { Infer } from "./types.js";
 
 /**
  * Creates an array validator which validates array elements against the inner validator.
@@ -57,4 +58,4 @@ function string() {
   return new K_String();
 }
 
-export { array, boolean, nullable, number, object, oneOf, string };
+export { array, boolean, nullable, number, object, oneOf, string, Infer };

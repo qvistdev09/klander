@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.5
+
+- export Infer utility type
+
 ## 0.0.4
 
 - change custom validation checks to always run with the unknown input rather than only running after ordinary checks have passed
